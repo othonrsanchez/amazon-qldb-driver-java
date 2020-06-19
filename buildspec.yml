@@ -30,12 +30,12 @@ phases:
       - mvn verify -Dregion=us-east-2
     finally:
       - echo Verification complete
-  reports:
-    unit-tests:
-      files:
-        - "**/*"
-      base-directory: 'target/site/jacoco/'
-      discard-paths: no
+reports:
+  unit-tests:
+    files:
+      - "**/*"
+    base-directory: 'target/site/jacoco/'
+    discard-paths: no
 #artifacts:
   #files:
     # - location
