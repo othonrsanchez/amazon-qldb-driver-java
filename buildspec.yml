@@ -34,7 +34,8 @@ reports:
   unit-tests:
     files:
       - "**/*"
-    base-directory: 'target/site/jacoco/'
+    base-directory: 'target/surefire-reports/'
+    file-format: JunitXml
     discard-paths: no
 #artifacts:
   #files:
