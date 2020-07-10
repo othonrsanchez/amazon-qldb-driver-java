@@ -11,8 +11,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy: 
       matrix : 
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        java: [8, 11, 14-ea]
+        os: [ubuntu-latest]
+        java: [8]
     
     steps:
     - uses: actions/checkout@v2
@@ -22,3 +22,25 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Build with Maven
       run: mvn -B install --file pom.xml
+    - name: Set up GPG
+      run: |
+        echo "$GPG_PRIVATE_KEY" > private.asc
+        gpg --import --batch private.asc
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPGPRIVATEKEY }}
+    - name: Set up Apache Maven Central
+      uses: actions/setup-java@v1
+      with: # running setup-java again overwrites the settings.xml
+        java-version: 1.8
+        server-id: maven # Value of the distributionManagement/repository/id field of the pom.xml
+        server-username: MAVEN_USERNAME # env variable for username in deploy
+        server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
+    - name: Deploy
+      id: deploy
+      run: |
+        mvn -Pdeploy -Dgpg.passphrase=${GPG_PASSPHRASE} clean deploy
+        echo "::set-output name=version::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+      env:
+        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
