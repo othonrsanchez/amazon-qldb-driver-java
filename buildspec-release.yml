@@ -5,7 +5,7 @@ env:
     MAVEN_USER: prod/MavenCrendentials:MAVEN_USER
     MAVEN_PASSWORD: prod/MavenCrendentials:MAVEN_PASSWORD
     GPG_PASSPHRASE: prod/GPG_PASSPHRASE
-    GPG_PRIVATE_KEY: - prod/GPG_PRIVATE_KEY
+    GPG_PRIVATE_KEY: prod/GPG_PRIVATE_KEY
 phases:
   install:
     runtime-versions:
